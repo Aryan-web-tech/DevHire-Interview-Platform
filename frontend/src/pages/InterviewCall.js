@@ -46,7 +46,7 @@ export default function InterviewCall() {
     } finally {
       setCallEnded(true); // show modal to candidate too
     }
-  });
+  },[call]);
 
   useEffect(() => {
     if (joinedRef.current) return;

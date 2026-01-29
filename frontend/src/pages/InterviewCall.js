@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useRef } from "react";
+import { useEffect, useState, useContext, useRef, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/authContext";
@@ -28,7 +28,7 @@ export default function InterviewCall() {
 
   const joinedRef = useRef(false);
 
-  const handleExit = async () => {
+  const handleExit = useCallback( async () => {
     try {
       if (call) {
         await call.camera.disable();
@@ -46,7 +46,7 @@ export default function InterviewCall() {
     } finally {
       setCallEnded(true); // show modal to candidate too
     }
-  };
+  });
 
   useEffect(() => {
     if (joinedRef.current) return;

@@ -1,52 +1,58 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import { AuthContext } from '../context/authContext'
 
 export default function InterviewLobby() {
-    const {interviewId} = useParams()
-    const [cameraAllowed,setCameraAllowed] = useState(false)
-    const [micAllowed,setMicAllowed] = useState(false)
-    const [stream,setStream] = useState(null)  //Media stream from camera + mic
-    const [error,setError] = useState(null)
-    const navigate = useNavigate()
-    const {user} = useContext(AuthContext)
+  const { interviewId } = useParams()
+  const { user } = useContext(AuthContext)
+  const navigate = useNavigate()
 
-    useEffect(() => {
-        const getPermissions = async() => {
+  const [cameraAllowed, setCameraAllowed] = useState(false)
+  const [micAllowed, setMicAllowed] = useState(false)
+  const [stream, setStream] = useState(null)  // Media stream from camera + mic
+  const [error, setError] = useState(null)
 
-            try{
-                const mediaStream = await navigator.mediaDevices.getUserMedia({
-                video:true,
-                audio:true
-                })
+  const videoRef = useRef(null) // ref for video element
 
-                setCameraAllowed(true)
-                setMicAllowed(true)
-                setStream(mediaStream)  
-            }
-            catch(error)
-            {
-                setError("Camera or microphone permission denied")
-            }
-        };
+  useEffect(() => {
+    let localStream;
 
-        getPermissions();
+    const getPermissions = async () => {
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true
+        })
+        setCameraAllowed(true)
+        setMicAllowed(true)
+        setStream(localStream)
+      } catch (err) {
+        setError("Camera or microphone permission denied")
+      }
+    }
 
-        return () => {
-            stream?.getTracks().forEach(track => track.stop());
-        };
-            
-    },[user.id, stream])
+    getPermissions()
 
-    return (
+    // cleanup when component unmounts
+    return () => {
+      localStream?.getTracks().forEach(track => track.stop())
+    }
+  }, []) // run only once on mount ✅
+
+  // Set video srcObject when stream is ready
+  useEffect(() => {
+    if (videoRef.current && stream) {
+      videoRef.current.srcObject = stream
+    }
+  }, [stream])
+
+  return (
     <div className="min-h-screen bg-black text-white">
       <Navbar />
 
       <div className="max-w-4xl mx-auto px-6 py-10">
-        <h1 className="text-2xl font-bold mb-6">
-          Interview Setup
-        </h1>
+        <h1 className="text-2xl font-bold mb-6">Interview Setup</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Camera Preview */}
@@ -55,26 +61,20 @@ export default function InterviewLobby() {
 
             {cameraAllowed ? (
               <video
+                ref={videoRef}
                 autoPlay
                 muted
                 playsInline
-                ref={video => {
-                  if (video && stream) video.srcObject = stream;
-                }}
                 className="rounded-lg w-full"
               />
             ) : (
-              <p className="text-zinc-400">
-                Camera not available
-              </p>
+              <p className="text-zinc-400">Camera not available</p>
             )}
           </div>
 
           {/* Instructions */}
           <div className="bg-zinc-900 rounded-xl p-4">
-            <h3 className="font-semibold mb-3">
-              Instructions
-            </h3>
+            <h3 className="font-semibold mb-3">Instructions</h3>
             <ul className="text-sm text-zinc-400 space-y-2 list-disc pl-5">
               <li>Join from a quiet environment</li>
               <li>Ensure camera & microphone are working</li>
@@ -84,16 +84,12 @@ export default function InterviewLobby() {
           </div>
         </div>
 
-        {error && (
-          <p className="text-red-500 mt-4">{error}</p>
-        )}
+        {error && <p className="text-red-500 mt-4">{error}</p>}
 
         <div className="mt-8 flex justify-center">
           <button
             disabled={!cameraAllowed || !micAllowed}
-            onClick={() =>
-              navigate(`/interview/${interviewId}/call`)
-            }
+            onClick={() => navigate(`/interview/${interviewId}/call`)}
             className={`px-6 py-3 rounded-lg font-semibold ${
               cameraAllowed && micAllowed
                 ? "bg-indigo-600 hover:bg-indigo-700"
@@ -105,5 +101,5 @@ export default function InterviewLobby() {
         </div>
       </div>
     </div>
-  );
+  )
 }

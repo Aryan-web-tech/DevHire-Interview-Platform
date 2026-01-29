@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import { AuthContext } from '../context/authContext'
 
 export default function InterviewLobby() {
     const {interviewId} = useParams()
@@ -9,6 +10,7 @@ export default function InterviewLobby() {
     const [stream,setStream] = useState(null)  //Media stream from camera + mic
     const [error,setError] = useState(null)
     const navigate = useNavigate()
+    const {user} = useContext(AuthContext)
 
     useEffect(() => {
         const getPermissions = async() => {

@@ -33,7 +33,7 @@ export default function JoinInterviewPage() {
 
       return () => clearInterval(intervalId);
     
-  },[])
+  },[user.id])
 
 
     return (

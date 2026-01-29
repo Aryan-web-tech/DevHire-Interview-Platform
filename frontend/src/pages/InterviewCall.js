@@ -100,7 +100,7 @@ export default function InterviewCall() {
     return () => {
       call.off("call.ended", handleCallEnded);
     };
-  }, [call, interviewId]);
+  }, [call, interviewId, handleExit]);
 
   if (!client || !call) {
     return (

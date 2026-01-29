@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/authContext";
 import {
@@ -27,7 +27,6 @@ export default function InterviewCall() {
   const [callEnded, setCallEnded] = useState(false);
 
   const joinedRef = useRef(false);
-  const navigate = useNavigate();
 
   const handleExit = async () => {
     try {

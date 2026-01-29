@@ -35,7 +35,7 @@ export default function InterviewLobby() {
             stream?.getTracks().forEach(track => track.stop());
         };
             
-    },[])
+    },[user.id])
 
     return (
     <div className="min-h-screen bg-black text-white">

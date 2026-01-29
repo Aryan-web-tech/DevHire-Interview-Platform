@@ -94,7 +94,7 @@ export default function ScheduleModal({onClose}) {
                 candidates,
                 interviewers,
                 scheduledAt)
-            const response = await axios.post("http://localhost:8000/api/v1/interview/schedule",{
+            await axios.post("http://localhost:8000/api/v1/interview/schedule",{
                 title,
                 description,
                 candidates,

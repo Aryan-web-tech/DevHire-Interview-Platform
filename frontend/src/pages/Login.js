@@ -15,7 +15,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post("http://localhost:8000/api/v1/auth/login", { email, password });
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v1/auth/login`, { email, password });
       const token = response.data.token
       localStorage.setItem("token", token)
       setUser(jwtDecode(token))

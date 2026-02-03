@@ -19,7 +19,7 @@ export default function SharedEditor({ interviewId, user }) {
 
   useEffect(() => {
     // Create socket once
-    socketRef.current = io("http://localhost:8000");
+    socketRef.current = io(`${process.env.REACT_APP_BASE_URL}`);
 
     socketRef.current.on("connect", () => {
       console.log("Connected to socket", socketRef.current.id);

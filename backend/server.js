@@ -12,7 +12,7 @@ const {setupSocket} = require('./socket/socket')
 const app = express()
 const server = http.createServer(app)
 app.use(cors({
-  origin: "https://dev-hire-interview-platform.vercel.app",
+  origin: [process.env.FRONTEND_URL,"http://localhost:3000"],
   credentials: true, 
 }));
 app.use(express.json())

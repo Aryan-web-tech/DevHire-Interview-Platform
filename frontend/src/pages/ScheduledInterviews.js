@@ -12,7 +12,7 @@ export default function ScheduledInterviews() {
       const fetchData = async() => {
         try{
 
-            const response = await axios.get(`http://localhost:8000/api/v1/interview/user/${user.id}?status=scheduled`);
+            const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/interview/user/${user.id}?status=scheduled`);
             setScheduledInterviews(response.data.interviews)
           }
           catch(error)

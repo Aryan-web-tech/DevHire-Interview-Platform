@@ -55,7 +55,7 @@ export default function InterviewCall() {
     const joinCall = async () => {
       try {
         const res = await axios.post(
-          `http://localhost:8000/api/v1/interview/${interviewId}/call`,
+          `${process.env.REACT_APP_BASE_URL}/api/v1/interview/${interviewId}/call`,
           { userId: user.id }
         );
 
@@ -87,7 +87,7 @@ export default function InterviewCall() {
     const handleCallEnded = async () => {
       try {
         await axios.patch(
-          `http://localhost:8000/api/v1/interview/${interviewId}/complete`
+          `${process.env.REACT_APP_BASE_URL}/api/v1/interview/${interviewId}/complete`
         );
       } catch (err) {
         console.error("Failed to mark interview completed", err);

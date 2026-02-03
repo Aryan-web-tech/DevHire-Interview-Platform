@@ -114,4 +114,47 @@ const scheduleInterviews = async(req,res) => {
     }
 }
 
-module.exports = {scheduleInterviews,getInterviews,joinMeeting,completeInterview}
+const recordingWebhook = async(req,res) => {
+    try{
+        const event = req.body;
+
+        if(event.type === "call.recording_ready")
+        {
+            const {call_id , recording : {url,id:recordingId}} = event;
+
+            // get interview info
+            const interviewInfo = await pool.query(`SELECT id,created_by FROM interviews WHERE stream_call_id=$1`,[call_id])
+
+            if(interviewInfo.rows.length === 0 ) return res.sendStatus(200);
+
+            const interview = interviewInfo.rows[0];
+
+            await pool.query(`
+                INSERT INTO recordings (interview_id,recording_url,stream_recording_id,created_by)
+                VALUES ($1,$2,$3,$4)`,[interview.id,url,recordingId,interview.created_by]);
+
+            
+        }
+        res.sendStatus(200)
+    }
+    catch(err)
+    {
+        console.error("Webhook error : ",err)
+        res.sendStatus(500);
+    }
+}
+
+const getMyRecordings = async(res,req) => {
+        const userId = req.params.userId;
+
+        const result = await pool.query(`
+            SELECT r.id,r.recording_url,i.title,i.scheduled_at
+            FROM recordings r
+            JOIN interviews i ON r.interview_id=i.id
+            WHERE i.created_by = $1
+            ORDER BY i.scheduled_at DESC`,[userId])
+        
+        res.json({ recordings: result.rows });    
+}
+
+module.exports = {scheduleInterviews,getInterviews,joinMeeting,completeInterview,recordingWebhook,getMyRecordings}

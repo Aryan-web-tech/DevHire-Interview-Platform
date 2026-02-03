@@ -1,11 +1,9 @@
 import React, { useContext, useEffect, useState, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-import { AuthContext } from '../context/authContext'
 
 export default function InterviewLobby() {
   const { interviewId } = useParams()
-  const { user } = useContext(AuthContext)
   const navigate = useNavigate()
 
   const [cameraAllowed, setCameraAllowed] = useState(false)

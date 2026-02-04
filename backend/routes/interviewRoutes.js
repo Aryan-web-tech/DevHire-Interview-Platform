@@ -8,6 +8,6 @@ router.get("/user/:userId",getInterviews)
 router.post("/:interviewId/call",joinMeeting)
 router.patch("/:interviewId/complete",completeInterview)
 router.post("/webhook/stream",recordingWebhook)
-router.post("/recordings/:userId",getMyRecordings)
+router.get("/recordings/:userId",getMyRecordings)
 
 module.exports = router

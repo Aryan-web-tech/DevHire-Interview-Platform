@@ -11,8 +11,8 @@ export default function Recordings() {
   useEffect(() => {
     const fetchRecordings = async () => {
       try {
-        const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/interview/recordings/${user.id}`,);
-        setRecordings(res.data);
+        const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/api/v1/interview/recordings/${user.id}`);
+        setRecordings(res.data.recordings || res.data);
       } catch (err) {
         console.error("Failed to fetch recordings", err);
       } finally {

@@ -120,7 +120,21 @@ const recordingWebhook = async(req,res) => {
 
         if(event.type === "call.recording_ready")
         {
-            const {call_id , recording : {url,id:recordingId}} = event;
+            // Handle both possible payload structures from Stream.io
+            const recording = event.recording || event.data?.recording;
+            const call_id = event.call_id || event.data?.call_id;
+            
+            if(!recording || !call_id) {
+                console.log("Missing recording or call_id in webhook payload:", event);
+                return res.sendStatus(200);
+            }
+
+            const {url, id: recordingId} = recording;
+
+            if(!url || !recordingId) {
+                console.log("Missing url or recordingId in recording object:", recording);
+                return res.sendStatus(200);
+            }
 
             // get interview info
             const interviewInfo = await pool.query(`SELECT id,created_by FROM interviews WHERE stream_call_id=$1`,[call_id])
@@ -144,7 +158,7 @@ const recordingWebhook = async(req,res) => {
     }
 }
 
-const getMyRecordings = async(res,req) => {
+const getMyRecordings = async(req,res) => {
         const userId = req.params.userId;
 
         const result = await pool.query(`

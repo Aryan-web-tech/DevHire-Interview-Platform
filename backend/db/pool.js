@@ -5,8 +5,7 @@
 // Prevents too many open connections
 //Pool is a collection of reusable PostgreSQL connections.
 
-import pkg from "pg";
-const { Pool } = pkg;
+const { Pool } = require('pg');
 
 const pool = new Pool({
   host: 'aws-1-ap-south-1.pooler.supabase.com',

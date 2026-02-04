@@ -139,12 +139,12 @@ export default function InterviewCall() {
                 <ToggleVideoPublishingButton />
                 <ToggleAudioPublishingButton />
 
-                {user?.role?.toLowerCase() === "interviewer" ? <RecordCallButton /> : null}
+                {user.role === "interviewer" ? <RecordCallButton /> : null}
                 
                 
                 <ScreenShareButton />
 
-                {user?.role?.toLowerCase() === "candidate" ? (
+                {user.role === "candidate" ? (
                   <button
                     onClick={handleExit}
                     className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-lg font-semibold"

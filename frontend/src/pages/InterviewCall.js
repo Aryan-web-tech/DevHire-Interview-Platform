@@ -92,6 +92,10 @@ export default function InterviewCall() {
       } catch (err) {
         console.error("Failed to mark interview completed", err);
       }
+      
+      // Replace browser history so back button doesn't return to ended call
+      window.history.replaceState(null, "", "/dashboard");
+      
       await handleExit(); // cleanup + show modal
     };
 

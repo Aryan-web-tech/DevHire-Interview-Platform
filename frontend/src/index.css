@@ -3,19 +3,9 @@
 @tailwind utilities;
 
 /* frontend/src/index.css */
-.custom-stream-video,
-.custom-stream-video * {
-  color: #00ff00 !important; 
+.custom-stream-video{
+  color: #fefefe !important; 
 }
 
-/* Stronger, targeted overrides for Stream Video SDK participant labels */
-.custom-stream-video .sv__participant-name,
-.custom-stream-video .sv__participant-identity,
-.custom-stream-video .sv__participant-label,
-.custom-stream-video .sv__name,
-.custom-stream-video .participant-name,
-.custom-stream-video [data-testid="participant-name"],
-.custom-stream-video .sv__participant .sv__participant-name {
-  color: #00ff00 !important;
-}
+
 

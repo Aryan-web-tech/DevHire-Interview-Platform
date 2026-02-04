@@ -120,7 +120,6 @@ const recordingWebhook = async(req,res) => {
 
         if(event.type === "call.recording_ready")
         {
-            // Handle both possible payload structures from Stream.io
             const recording = event.recording || event.data?.recording;
             const call_id = event.call_id || event.data?.call_id;
             

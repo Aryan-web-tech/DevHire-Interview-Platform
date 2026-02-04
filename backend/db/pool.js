@@ -9,10 +9,10 @@ import pkg from "pg";
 const { Pool } = pkg;
 
 const pool = new Pool({
-  host: 'db.ckzvpiptwqkmyzgbfbrf.supabase.co',
-  port: 5432,
-  user: 'postgres',
-  password: 'ABCroot$4004',   // PUT YOUR PASSWORD HERE DIRECTLY
+  host: 'aws-1-ap-south-1.pooler.supabase.com',
+  port: 6543,
+  user: 'postgres.ckzvpiptwqkmyzgbfbrf',
+  password: 'ABCroot$4004',   
   database: 'postgres',
   ssl: { rejectUnauthorized: false }
 });

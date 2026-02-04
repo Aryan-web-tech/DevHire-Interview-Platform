@@ -114,48 +114,67 @@ const scheduleInterviews = async(req,res) => {
     }
 }
 
-const recordingWebhook = async(req,res) => {
-    try{
-        const event = req.body;
+const recordingWebhook = async (req, res) => {
+  try {
+    const event = req.body;
 
-        if(event.type === "call.recording_ready")
-        {
-            const recording = event.recording || event.data?.recording;
-            const call_id = event.call_id || event.data?.call_id;
-            
-            if(!recording || !call_id) {
-                console.log("Missing recording or call_id in webhook payload:", event);
-                return res.sendStatus(200);
-            }
+    if (event.type === "call.recording_ready") {
+      // support multiple payload shapes
+      const recording =
+        event.recording ||
+        event.call_recording ||
+        event.data?.recording ||
+        event.data?.call_recording;
+      let call_id =
+        event.call_id || event.call_cid || event.data?.call_id || event.data?.call_cid;
 
-            const {url, id: recordingId} = recording;
+      if (!recording || !call_id) {
+        console.log("Missing recording or call_id in webhook payload:", event);
+        return res.sendStatus(200);
+      }
 
-            if(!url || !recordingId) {
-                console.log("Missing url or recordingId in recording object:", recording);
-                return res.sendStatus(200);
-            }
+      // strip prefix like "default:<id>"
+      if (typeof call_id === "string" && call_id.includes(":")) {
+        call_id = call_id.split(":").pop();
+      }
 
-            // get interview info
-            const interviewInfo = await pool.query(`SELECT id,created_by FROM interviews WHERE stream_call_id=$1`,[call_id])
+      // record id may be under id, session_id, or filename
+      const recordingId = recording.id || recording.session_id || recording.filename || null;
+      const url = recording.url || recording.playback_url || recording.download_url || null;
 
-            if(interviewInfo.rows.length === 0 ) return res.sendStatus(200);
+      if (!url) {
+        console.log("Missing url in recording object:", recording);
+        return res.sendStatus(200);
+      }
 
-            const interview = interviewInfo.rows[0];
+      // find interview by stream_call_id (the streamCallId you created)
+      const interviewInfo = await pool.query(
+        `SELECT id, created_by FROM interviews WHERE stream_call_id = $1`,
+        [call_id]
+      );
 
-            await pool.query(`
-                INSERT INTO recordings (interview_id,recording_url,stream_recording_id,created_by)
-                VALUES ($1,$2,$3,$4)`,[interview.id,url,recordingId,interview.created_by]);
+      if (interviewInfo.rows.length === 0) {
+        console.log("No interview found for call_id:", call_id);
+        return res.sendStatus(200);
+      }
 
-            
-        }
-        res.sendStatus(200)
+      const interview = interviewInfo.rows[0];
+
+      await pool.query(
+        `INSERT INTO recordings (interview_id, recording_url, stream_recording_id, created_by)
+         VALUES ($1, $2, $3, $4)`,
+        [interview.id, url, recordingId, interview.created_by]
+      );
+
+      console.log("Recording saved for interview:", interview.id, "url:", url, "recordingId:", recordingId);
     }
-    catch(err)
-    {
-        console.error("Webhook error : ",err)
-        res.sendStatus(500);
-    }
-}
+
+    res.sendStatus(200);
+  } catch (err) {
+    console.error("Webhook error : ", err);
+    res.sendStatus(500);
+  }
+};
 
 const getMyRecordings = async(req,res) => {
         const userId = req.params.userId;

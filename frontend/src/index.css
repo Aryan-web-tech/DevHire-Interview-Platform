@@ -2,4 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-
+/* frontend/src/index.css */
+.custom-stream-video,
+.custom-stream-video * {
+  color: #00ff00 !important; 
+}

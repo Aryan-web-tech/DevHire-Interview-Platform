@@ -3,7 +3,7 @@ import axios from "axios"
 import { useNavigate } from 'react-router-dom'
 import { useContext } from 'react'
 import { AuthContext } from '../context/authContext'
-import { jwtDecode } from 'jwt-decode'
+import jwtDecode from 'jwt-decode'
 
 export default function Signup() {
   const [username, setUsername] = useState('')

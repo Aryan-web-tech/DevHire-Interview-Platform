@@ -117,7 +117,7 @@ export default function InterviewCall() {
         <StreamCall call={call}>
           <StreamTheme>
             {/* FULL SCREEN CONTAINER */}
-            <div className="h-screen w-screen bg-black flex flex-col overflow-hidden">
+            <div className="custom-stream-video h-screen w-screen bg-black flex flex-col overflow-hidden">
 
               {/* MAIN CONTENT */}
               <div className="flex-1 flex overflow-hidden">
@@ -139,12 +139,12 @@ export default function InterviewCall() {
                 <ToggleVideoPublishingButton />
                 <ToggleAudioPublishingButton />
 
-                {user.role === "interviewer" ? <RecordCallButton /> : null}
+                {user?.role?.toLowerCase() === "interviewer" ? <RecordCallButton /> : null}
                 
                 
                 <ScreenShareButton />
 
-                {user.role === "candidate" ? (
+                {user?.role?.toLowerCase() === "candidate" ? (
                   <button
                     onClick={handleExit}
                     className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-lg font-semibold"

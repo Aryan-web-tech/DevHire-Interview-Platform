@@ -138,7 +138,9 @@ export default function InterviewCall() {
               <div className="h-20 flex items-center justify-center gap-4 bg-zinc-900 border-t border-zinc-800">
                 <ToggleVideoPublishingButton />
                 <ToggleAudioPublishingButton />
-                <RecordCallButton />
+
+                {user.role === "interviewer" ? <RecordCallButton /> : null}
+                
                 
                 <ScreenShareButton />
 

@@ -139,8 +139,8 @@ participants.
 ### 1️⃣ Clone Repository
 
 ``` bash
-git clone https://github.com/your-username/devhire.git
-cd devhire
+https://github.com/Aryan-web-tech/DevHire-Interview-Platform.git
+cd DevHire-Interview-Platform
 ```
 
 ### 2️⃣ Backend Setup
